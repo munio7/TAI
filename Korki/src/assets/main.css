@@ -1,0 +1,19 @@
+:root{
+  --navbar-height: 50px;
+  --main-bg-color: #0C1E2A;
+  --text-accent-color: #00D9FF;
+  --secondary-color: #013A63;
+  --buttons-color-1: #A9D6E5:
+  --navbar-color: #ffffff; 
+}
+
+*{
+  padding: 0;
+  margin: 0;
+}
+
+html,body,#app{
+  height: 100%;
+  width: 100%;
+}
+

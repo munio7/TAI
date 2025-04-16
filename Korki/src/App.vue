@@ -1,19 +1,20 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
+  import { RouterLink, RouterView } from 'vue-router'
+  import Navbar from './components/Navbar.vue';
 </script>
+
+<style>
+  @import './assets/main.css';
+</style>
+
 
 <template>
   <header>
-
-    <div class="wrapper">
       <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
+        <Navbar/>
       </nav>
-    </div>
   </header>
-
-  <RouterView />
+    <RouterView />
 </template>
 
 <style scoped>
@@ -25,7 +26,7 @@ header {
 nav {
   width: 100%;
   font-size: 12px;
-  text-align: center;
+
 }
 
 nav a.router-link-exact-active {
