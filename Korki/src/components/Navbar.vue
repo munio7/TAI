@@ -1,6 +1,6 @@
 <template>
     <main>
-        <div id="logo"></div>
+        <img @click="goToHome" id="logo" src="../assets/logo.svg">
         <NButton text >Załóż konto</NButton>
         <NButton text >Zaloguj</NButton>
         <!-- <RouterLink to="/">Home</RouterLink>
@@ -11,8 +11,12 @@
 
 <script setup lang="ts">
 import { NButton } from 'naive-ui'
+import { useRouter } from 'vue-router';
 
-
+const router = useRouter()
+const goToHome = () => {
+  router.push("/")
+}
 
 </script>
 
@@ -26,6 +30,12 @@ main{
     /* height: calc(100vh - var(--router-width)); */
     height: var(--navbar-height);
     width: 100%;
+}
+
+img{
+  cursor: pointer;
+  padding: 10px;
+  height: calc(100% - 10px);
 }
 
 
