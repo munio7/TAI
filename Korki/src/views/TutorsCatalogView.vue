@@ -1,18 +1,19 @@
 <script setup lang="ts">
 import {ref} from 'vue'
+import Tutor from '@/components/Tutor.vue';
 import { NButton, NIcon ,NInput, NSkeleton} from 'naive-ui'
 import { useRouter } from 'vue-router'
 
     const tutors = ref([
-        {rating:"68", name:"Title", surname:'Author', imgPath:'../assets/book-cover.jpg',priceFrom: 70 ,discription:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime quos ex in sint explicabo quae atque. Unde officia hic magni doloremque beatae, amet nulla doloribus ad ipsa ea velit atque!'},
-        {rating:"68", name:"Title", surname:'Author', imgPath:'../assets/book-cover.jpg',priceFrom: 70 ,discription:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime quos ex in sint explicabo quae atque. Unde officia hic magni doloremque beatae, amet nulla doloribus ad ipsa ea velit atque!'},
-        {rating:"68", name:"Title", surname:'Author', imgPath:'../assets/book-cover.jpg',priceFrom: 70 ,discription:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime quos ex in sint explicabo quae atque. Unde officia hic magni doloremque beatae, amet nulla doloribus ad ipsa ea velit atque!'},
-        {rating:"68", name:"Title", surname:'Author', imgPath:'../assets/book-cover.jpg',priceFrom: 70 ,discription:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime quos ex in sint explicabo quae atque. Unde officia hic magni doloremque beatae, amet nulla doloribus ad ipsa ea velit atque!'},
-        {rating:"68", name:"Title", surname:'Author', imgPath:'../assets/book-cover.jpg',priceFrom: 70 ,discription:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime quos ex in sint explicabo quae atque. Unde officia hic magni doloremque beatae, amet nulla doloribus ad ipsa ea velit atque!'},
-        {rating:"68", name:"Title", surname:'Author', imgPath:'../assets/book-cover.jpg',priceFrom: 70 ,discription:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime quos ex in sint explicabo quae atque. Unde officia hic magni doloremque beatae, amet nulla doloribus ad ipsa ea velit atque!'},
-        {rating:"68", name:"Title", surname:'Author', imgPath:'../assets/book-cover.jpg',priceFrom: 70 ,discription:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime quos ex in sint explicabo quae atque. Unde officia hic magni doloremque beatae, amet nulla doloribus ad ipsa ea velit atque!'},
-        {rating:"68", name:"Title", surname:'Author', imgPath:'../assets/book-cover.jpg',priceFrom: 70 ,discription:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime quos ex in sint explicabo quae atque. Unde officia hic magni doloremque beatae, amet nulla doloribus ad ipsa ea velit atque!'},
-        {rating:"68", name:"Title", surname:'Author', imgPath:'../assets/book-cover.jpg',priceFrom: 70 ,discription:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime quos ex in sint explicabo quae atque. Unde officia hic magni doloremque beatae, amet nulla doloribus ad ipsa ea velit atque!'},
+        {rating:68, name:"Title", surname:'Author', imgPath:'../assets/book-cover.jpg',priceFrom: 70 ,discription:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime quos ex in sint explicabo quae atque. Unde officia hic magni doloremque beatae, amet nulla doloribus ad ipsa ea velit atque!'},
+        {rating:68, name:"Title", surname:'Author', imgPath:'../assets/book-cover.jpg',priceFrom: 70 ,discription:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime quos ex in sint explicabo quae atque. Unde officia hic magni doloremque beatae, amet nulla doloribus ad ipsa ea velit atque!'},
+        {rating:68, name:"Title", surname:'Author', imgPath:'../assets/book-cover.jpg',priceFrom: 70 ,discription:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime quos ex in sint explicabo quae atque. Unde officia hic magni doloremque beatae, amet nulla doloribus ad ipsa ea velit atque!'},
+        {rating:68, name:"Title", surname:'Author', imgPath:'../assets/book-cover.jpg',priceFrom: 70 ,discription:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime quos ex in sint explicabo quae atque. Unde officia hic magni doloremque beatae, amet nulla doloribus ad ipsa ea velit atque!'},
+        {rating:68, name:"Title", surname:'Author', imgPath:'../assets/book-cover.jpg',priceFrom: 70 ,discription:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime quos ex in sint explicabo quae atque. Unde officia hic magni doloremque beatae, amet nulla doloribus ad ipsa ea velit atque!'},
+        {rating:68, name:"Title", surname:'Author', imgPath:'../assets/book-cover.jpg',priceFrom: 70 ,discription:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime quos ex in sint explicabo quae atque. Unde officia hic magni doloremque beatae, amet nulla doloribus ad ipsa ea velit atque!'},
+        {rating:68, name:"Title", surname:'Author', imgPath:'../assets/book-cover.jpg',priceFrom: 70 ,discription:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime quos ex in sint explicabo quae atque. Unde officia hic magni doloremque beatae, amet nulla doloribus ad ipsa ea velit atque!'},
+        {rating:68, name:"Title", surname:'Author', imgPath:'../assets/book-cover.jpg',priceFrom: 70 ,discription:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime quos ex in sint explicabo quae atque. Unde officia hic magni doloremque beatae, amet nulla doloribus ad ipsa ea velit atque!'},
+        {rating:68, name:"Title", surname:'Author', imgPath:'../assets/book-cover.jpg',priceFrom: 70 ,discription:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime quos ex in sint explicabo quae atque. Unde officia hic magni doloremque beatae, amet nulla doloribus ad ipsa ea velit atque!'},
     ]);
 
 </script>
@@ -30,7 +31,13 @@ import { useRouter } from 'vue-router'
                 </div>
             </div>
             <div class="catalog">
-                <!-- <Book @click="goToBook(index)" v-for="(book,index) in books" :available="book.available" :title="book.title" :author="book.author" :cover="book.cover" :key="index"/> -->
+                 <Tutor  v-for="(tutor,index) in tutors" 
+                :rating="tutor.rating"
+                :name="tutor.name"
+                :surname="tutor.surname"
+                :price-from="tutor.priceFrom"
+                :discription="tutor.discription"
+                :key="index"/> 
             </div>
         </div>
     </div>
@@ -71,6 +78,7 @@ import { useRouter } from 'vue-router'
     justify-content: space-between;
     gap: 10px;
     height: calc(100% - 2 * var(--padding));
+    overflow: hidden;
 }
 
 .filters-and-catalog > *{
@@ -102,9 +110,13 @@ import { useRouter } from 'vue-router'
     border-radius: 10px;
     flex: 1 1 70%;
     padding: 10px;
-    display: grid;
-    grid-template-columns: repeat(auto-fit,minmax(200px,1fr));
-    gap: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    height: 100%;
+    overflow: scroll;
+    scrollbar-width: none;
+    box-sizing: border-box;
 }
 
 .catalog > *{
