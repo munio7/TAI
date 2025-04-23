@@ -1,12 +1,18 @@
 <script setup lang="ts">
 import {ref} from 'vue';
 import { NCheckbox, NSelect, NButton } from 'naive-ui';
+import { useRouter } from 'vue-router';
 
 const isOnline = ref(false);
 
 const handleOnline = () => {
   isOnline.value = !isOnline.value;
 };
+
+const router = useRouter()
+const goToCatalog = () => {
+  router.push("/catalog")
+}
 
 const subjectOptions = [{
   label: 'Najczęściej wybierane:',
@@ -63,6 +69,9 @@ const locOptions = [{
   disabled: true
 },
 ]
+
+
+
 </script>
 
 <template>
@@ -87,7 +96,7 @@ const locOptions = [{
             <span>Online</span>
           </div>
           <div id="search">
-            <NButton round >Szukaj</NButton>
+            <NButton @click="goToCatalog" round >Szukaj</NButton>
           </div>
         </div>
       </div>
