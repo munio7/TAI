@@ -22,12 +22,11 @@ import { useRouter } from 'vue-router'
     <div class="main">
         <div class="filters-and-catalog" >
             <div class="filters" >
-                
-                    <span style="color: white;">Genres:</span>
-                    <div class="filter">
-                    <!-- <n-button :focusable="false"  v-for="genre in bookGenres" round class="genre" :type="selectedGenres.includes(genre) ? 'primary' : 'default'"  @click="toggleGenre(genre)" :key="genre" :text-color="iconsColor">
-                        {{ genre }}
-                    </n-button> -->
+                <span style="color: white;">Filtry</span>
+                <div class="filter">
+                <!-- <n-button :focusable="false"  v-for="genre in bookGenres" round class="genre" :type="selectedGenres.includes(genre) ? 'primary' : 'default'"  @click="toggleGenre(genre)" :key="genre" :text-color="iconsColor">
+                    {{ genre }}
+                </n-button> -->
                 </div>
             </div>
             <div class="catalog">
@@ -43,7 +42,7 @@ import { useRouter } from 'vue-router'
 .main{
     height: calc(100% - var(--navbar-height));
     width: 100%;
-
+    background-color: var(--main-bg-color);
 }
 #logo {
     height: 100%;
@@ -63,22 +62,21 @@ import { useRouter } from 'vue-router'
 
 
 .filters-and-catalog{
+    --padding: 1rem;
+
     border-radius: 10px;
-    margin-top: 10px;
+    padding: var(--padding) ;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     gap: 10px;
-    height: 100%;
-    width: 100%;
-
+    height: calc(100% - 2 * var(--padding));
 }
 
 .filters-and-catalog > *{
     width: 100%;
+    background-color: var(--secondary-color);
 }
-
-
 
 .filters{
     border-radius: 10px;
@@ -87,7 +85,6 @@ import { useRouter } from 'vue-router'
     display: flex;
     min-width: 200px;
     height: fit-content;
-    background-color: antiquewhite;
     flex: 1 1 25%;
     gap: 1rem;
     flex-wrap: wrap;
@@ -103,15 +100,10 @@ import { useRouter } from 'vue-router'
 
 .catalog{
     border-radius: 10px;
-
     flex: 1 1 70%;
-    background-color: beige;
     padding: 10px;
-
     display: grid;
     grid-template-columns: repeat(auto-fit,minmax(200px,1fr));
-
-
     gap: 10px;
 }
 
