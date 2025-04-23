@@ -22,20 +22,21 @@ const goToHome = () => {
 
 <style scoped>
 main{
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 1rem;
-    background-color: var(--navbar-color);
-    /* height: calc(100vh - var(--router-width)); */
-    height: var(--navbar-height);
-    width: 100%;
+  /* padding: 0 0.5rem; */
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background-color: var(--navbar-color);
+  /* height: calc(100vh - var(--router-width)); */
+  height: var(--navbar-height);
 }
 
 img{
+  height: 100%;
   cursor: pointer;
-  padding: 10px;
-  height: calc(100% - 10px);
+  padding: 0.5rem;
+  box-sizing: border-box;
+  
 }
 
 

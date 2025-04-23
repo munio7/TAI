@@ -111,6 +111,7 @@ const locOptions = [{
 
   main{
     height: calc(100% - var(--navbar-height));
+    width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
