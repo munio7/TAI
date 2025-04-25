@@ -5,10 +5,10 @@ import { NButton, NIcon ,NInput, NSkeleton} from 'naive-ui'
 import { useRouter } from 'vue-router'
 
     const tutors = ref([
-        {rating:68, name:"Title", surname:'Author', imgPath:'../assets/book-cover.jpg',priceFrom: 70 ,discription:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime quos ex in sint explicabo quae atque. Unde officia hic magni doloremque beatae, amet nulla doloribus ad ipsa ea velit atque!'},
-        {rating:68, name:"Title", surname:'Author', imgPath:'../assets/book-cover.jpg',priceFrom: 70 ,discription:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime quos ex in sint explicabo quae atque. Unde officia hic magni doloremque beatae, amet nulla doloribus ad ipsa ea velit atque!'},
-        {rating:68, name:"Title", surname:'Author', imgPath:'../assets/book-cover.jpg',priceFrom: 70 ,discription:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime quos ex in sint explicabo quae atque. Unde officia hic magni doloremque beatae, amet nulla doloribus ad ipsa ea velit atque!'},
-        {rating:68, name:"Title", surname:'Author', imgPath:'../assets/book-cover.jpg',priceFrom: 70 ,discription:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime quos ex in sint explicabo quae atque. Unde officia hic magni doloremque beatae, amet nulla doloribus ad ipsa ea velit atque!'},
+        {rating:68, name:"Zosia", surname:'Okrasa', imgPath:'../assets/book-cover.jpg',priceFrom: 70 ,discription:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime quos ex in sint explicabo quae atque. Unde officia hic magni doloremque beatae, amet nulla doloribus ad ipsa ea velit atque!'},
+        {rating:68, name:"Maciej", surname:'Wrotniak', imgPath:'../assets/book-cover.jpg',priceFrom: 70 ,discription:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime quos ex in sint explicabo quae atque. Unde officia hic magni doloremque beatae, amet nulla doloribus ad ipsa ea velit atque!'},
+        {rating:68, name:"Krystian", surname:'Wrotniak', imgPath:'../assets/book-cover.jpg',priceFrom: 70 ,discription:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime quos ex in sint explicabo quae atque. Unde officia hic magni doloremque beatae, amet nulla doloribus ad ipsa ea velit atque!'},
+        {rating:68, name:"Kamil", surname:'Trojanowski', imgPath:'../assets/book-cover.jpg',priceFrom: 70 ,discription:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime quos ex in sint explicabo quae atque. Unde officia hic magni doloremque beatae, amet nulla doloribus ad ipsa ea velit atque!'},
         {rating:68, name:"Title", surname:'Author', imgPath:'../assets/book-cover.jpg',priceFrom: 70 ,discription:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime quos ex in sint explicabo quae atque. Unde officia hic magni doloremque beatae, amet nulla doloribus ad ipsa ea velit atque!'},
         {rating:68, name:"Title", surname:'Author', imgPath:'../assets/book-cover.jpg',priceFrom: 70 ,discription:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime quos ex in sint explicabo quae atque. Unde officia hic magni doloremque beatae, amet nulla doloribus ad ipsa ea velit atque!'},
         {rating:68, name:"Title", surname:'Author', imgPath:'../assets/book-cover.jpg',priceFrom: 70 ,discription:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime quos ex in sint explicabo quae atque. Unde officia hic magni doloremque beatae, amet nulla doloribus ad ipsa ea velit atque!'},
@@ -48,25 +48,9 @@ import { useRouter } from 'vue-router'
 
 .main{
     height: calc(100% - var(--navbar-height));
-    width: 100%;
+    /* width: 100%; */
     background-color: var(--main-bg-color);
 }
-#logo {
-    height: 100%;
-    width: auto ;
-
-    object-fit: contain;
-}
-
-
-.pasek-wyszukiwania{
-
-    border-radius: 10px 10px;
-    flex: 1 1 25%;
-    max-width: 25%;
-}
-
-
 
 .filters-and-catalog{
     --padding: 1rem;
@@ -77,8 +61,8 @@ import { useRouter } from 'vue-router'
     flex-wrap: wrap;
     justify-content: space-between;
     gap: 10px;
-    height: calc(100% - 2 * var(--padding));
-    overflow: hidden;
+    height: 100%;
+    box-sizing: border-box;
 }
 
 .filters-and-catalog > *{
@@ -89,7 +73,6 @@ import { useRouter } from 'vue-router'
 .filters{
     border-radius: 10px;
     padding: 10px;
-
     display: flex;
     min-width: 200px;
     height: fit-content;
@@ -97,7 +80,7 @@ import { useRouter } from 'vue-router'
     gap: 1rem;
     flex-wrap: wrap;
     align-items: center;
-
+    box-sizing: border-box;
 }
 
 .filter{
@@ -117,10 +100,5 @@ import { useRouter } from 'vue-router'
     overflow: scroll;
     scrollbar-width: none;
     box-sizing: border-box;
-}
-
-.catalog > *{
-    justify-self: center;
-
 }
 </style>

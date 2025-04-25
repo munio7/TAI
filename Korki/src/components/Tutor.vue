@@ -46,6 +46,8 @@ const props = defineProps({
     }
     main > div{
         flex: 1;
+        height: 100%;
+        padding: 0 1rem;
     }
     .first{
         display: flex;
@@ -53,18 +55,23 @@ const props = defineProps({
         align-items: center;
         gap: 0.5rem;
         height: 100%;
-        border-right: 1px solid rgba(0, 0, 0, 0.3);
+        max-width: 20%;
     }
     img{
         max-height: 100px;
     }
     .second{
         max-width: 60ch;
+        border-left: 1px solid rgba(0, 0, 0, 0.3);
+        border-right: 1px solid rgba(0, 0, 0, 0.3);
     }
     .third{
+
         display: flex;
         flex-direction: column;
         align-items: center;
+        justify-content:space-around;
         gap: 0.5rem;
+        max-width: fit-content;
     }
 </style>
