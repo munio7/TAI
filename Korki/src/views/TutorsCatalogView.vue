@@ -48,8 +48,7 @@ import { useRouter } from 'vue-router'
 
 .main{
     height: calc(100% - var(--navbar-height));
-    /* width: 100%; */
-    background-color: var(--main-bg-color);
+    /* width: 100%; */ 
 }
 
 .filters-and-catalog{
