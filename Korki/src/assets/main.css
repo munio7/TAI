@@ -3,19 +3,22 @@
   --main-bg-color: #0C1E2A;
   --text-accent-color: #00D9FF;
   --secondary-color: #013A63;
-  --buttons-color-1: #A9D6E5:
-  --navbar-color: #ffffff; 
+  --buttons-color-1: #A9D6E5;
+  --navbar-color: #FFFFFF; 
 }
 
 *{
   padding: 0;
   margin: 0; 
-  font-family: "Playfair Display", serif;
+  font-family: "Roboto", sans-serif;
 }
 
 html,body,#app{
   height: 100%;
   width: 100%;
+}
+#app{
+  background-color: var(--main-bg-color);
 }
 
 @media(max-width: 800px) {

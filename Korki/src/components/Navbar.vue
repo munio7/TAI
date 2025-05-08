@@ -1,8 +1,8 @@
 <template>
     <main>
         <img @click="goToHome" id="logo" src="../assets/logo.svg">
-        <NButton text >Załóż konto</NButton>
-        <NButton text >Zaloguj</NButton>
+        <NButton text @click="goToSignLogin('signup')" >Załóż konto</NButton>
+        <NButton text @click="goToSignLogin('login')">Zaloguj</NButton>
         <!-- <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/about">About</RouterLink> -->
 
@@ -17,6 +17,14 @@ const router = useRouter()
 const goToHome = () => {
   router.push("/")
 }
+const goToSignLogin = (page : string) => {
+  router.push(
+    {
+      name:'who-are-you',
+      params: { activePage: page } 
+    }
+    )
+}
 
 </script>
 
@@ -26,7 +34,7 @@ main{
   display: flex;
   align-items: center;
   gap: 1rem;
-  background-color: var(--navbar-color);
+  background-color: var(--navbar-color) !important;
   /* height: calc(100vh - var(--router-width)); */
   height: var(--navbar-height);
 }
