@@ -3,6 +3,8 @@ import HomeView from '../views/HomeView.vue'
 import TutorsCatalogView from '@/views/TutorsCatalogView.vue'
 import SignUpLoginView from '@/views/SignUpLoginView.vue'
 import UserPanelView from '@/views/UserPanelView.vue'
+import StudentsView from '@/views/StudentsView.vue'
+import CalendarView from '@/views/CalendarView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -26,6 +28,16 @@ const router = createRouter({
       path: '/profile/start',
       name: 'start',
       component: UserPanelView,
+    },
+    {
+      path: '/profile/students',
+      name: 'students',
+      component: StudentsView,
+    },
+        {
+      path: '/profile/calendar',
+      name: 'calendar',
+      component: CalendarView,
     },
   ],
 })
