@@ -14,7 +14,9 @@
         <Navbar/>
       </nav>
   </header>
-    <RouterView />
+    <transition name="fade" mode="out-in">
+      <router-view :key="$route.fullPath" />
+    </transition>
 </template>
 
 <style scoped>
@@ -45,6 +47,13 @@ nav a {
 
 nav a:first-of-type {
   border: 0;
+}
+/* Basic fade transition */
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
 }
 
 </style>
