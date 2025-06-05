@@ -5,6 +5,9 @@ import SignUpLoginView from '@/views/SignUpLoginView.vue'
 import UserPanelView from '@/views/UserPanelView.vue'
 import StudentsView from '@/views/StudentsView.vue'
 import CalendarView from '@/views/CalendarView.vue'
+import RegisterTutorView from '@/views/RegisterTutorView.vue'
+import TutorProfileView from '@/views/TutorProfileView.vue'
+import TutorProfileByIdView from '@/views/TutorProfileByIdView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -15,7 +18,7 @@ const router = createRouter({
       component: HomeView,
     },
     {
-      path: '/catalog',
+      path: '/catalog/',
       name: 'catalog',
       component: TutorsCatalogView,
     },
@@ -30,15 +33,32 @@ const router = createRouter({
       component: UserPanelView,
     },
     {
+      path: '/register',
+      name: 'register',
+      component: RegisterTutorView,
+    },
+    {
       path: '/profile/students',
       name: 'students',
       component: StudentsView,
     },
-        {
+    {
       path: '/profile/calendar',
       name: 'calendar',
       component: CalendarView,
     },
+    {
+      path: '/profile/me',
+      name: 'me',
+      component: TutorProfileView
+    },
+    {
+    path: '/teacher/:id',
+    name: 'TeacherProfile',
+    component: TutorProfileByIdView,
+    props: true // allows you to use the `id` as a prop in the component
+  }
+    
   ],
 })
 

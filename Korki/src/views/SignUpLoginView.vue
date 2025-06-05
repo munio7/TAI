@@ -1,147 +1,164 @@
 <template>
-    <main>
+  <main>
     <div class="form">
       <div class="header">
-        <h1 @click="handleChangeHeader('login')" id="login" :class="login ? 'focused' : '' " style="text-align: center;">Zaloguj</h1>
-        <h1  @click="handleChangeHeader('signup')" id="signup" :class="signup ? 'focused' : '' "style="text-align: center;" >Zarejestruj</h1>
+        <h1 @click="handleChangeHeader('login')" :class="login ? 'focused' : ''">Zaloguj</h1>
+        <h1 @click="handleChangeHeader('signup')" :class="signup ? 'focused' : ''">Zarejestruj</h1>
       </div>
-      <n-form
-          ref="formRef"
-          :model="formValue"
-          :rules="formRules"
-      > 
+
+      <n-form ref="formRef" :model="formValue" :rules="formRules">
         <n-form-item path="email">
-          <n-input 
-          v-model:value="formValue.email"
-          placeholder="Email" 
-          clearable 
-          />
+          <n-input v-model:value="formValue.email" placeholder="Email" clearable />
         </n-form-item>
 
         <n-form-item path="password">
-          <n-input 
-          v-model:value="formValue.password" 
-          placeholder="Hasło" 
-          clearable
-          type="password"
-          />
+          <n-input v-model:value="formValue.password" placeholder="Hasło" type="password" clearable />
         </n-form-item>
 
+        <template v-if="signup">
+          <n-form-item path="role" label="Rejestruję się jako">
+            <n-radio-group v-model:value="formValue.role">
+              <n-radio-button value="user">Student</n-radio-button>
+              <n-radio-button value="teacher">Teacher</n-radio-button>
+            </n-radio-group>
+          </n-form-item>
+
+          <n-form-item path="username">
+            <n-input v-model:value="formValue.username" placeholder="Nazwa użytkownika" />
+          </n-form-item>
+
+          <n-form-item path="firstName">
+            <n-input v-model:value="formValue.firstName" placeholder="Imię" />
+          </n-form-item>
+
+          <n-form-item path="lastName">
+            <n-input v-model:value="formValue.lastName" placeholder="Nazwisko" />
+          </n-form-item>
+        </template>
       </n-form>
-      
-      <Transition>
-        <n-checkbox v-if="login"
-         v-model:checked="remberMe"
-         :focusable="false"
-         >
-          Pamiętaj mnie
-        </n-checkbox>
-      </Transition>
 
       <div class="under-buttons">
-        <n-button  @click="handleEnterClick">
-          Dalej
-        </n-button>
-
-        <div class="divider">OR</div>
-        <div @click="handleGoogleClick" class="google">
-          <NIcon  size="large" color="#FFFFFF"
-            style=
-            "
-              border: 1px solid white; 
-              border-radius: 10px; 
-              padding: 2px;
-            "
-          ><LogoGoogle>
-            </LogoGoogle>
-          </NIcon>
+        <n-button @click="handleSubmit">Dalej</n-button>
+        <div class="divider">LUB</div>
+        <div  @click="handleGoogleClick" class="google">
+          <NIcon size="large" color="#FFFFFF"><LogoGoogle /></NIcon>
           <span>oogle</span>
+        </div>
       </div>
     </div>
-      
-    </div>
-    </main>
+  </main>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted,computed } from 'vue'
-import { NForm,NFormItem,NInput,NButton,NIcon,NCheckbox, type FormInst} from 'naive-ui';
-import { useRoute, useRouter } from 'vue-router';
-import {LogoGoogle} from '@vicons/ionicons5'
+import { ref, computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { NForm, NFormItem, NInput, NButton, NCheckbox,NIcon, NRadioGroup, NRadioButton, NDatePicker, type FormInst } from 'naive-ui'
+import { LogoGoogle } from '@vicons/ionicons5'
+import { registerUser ,loginUser,setO2AuthRole} from '@/service/authService'
+import { useAuth } from '@/stores/authStore'
 
-
-
+const router = useRouter()
 const route = useRoute()
 
 const login = computed(() => route.params.activePage === 'login')
 const signup = computed(() => route.params.activePage === 'signup')
 
-const handleChangeHeader = ( key: string) => {
-  router.push(
-    {
-      name:'who-are-you',
-      params: { activePage: key } 
-    })
-    
-    if (!(key == route.params.activePage))
-    {
-      formValue.value.email = ''
-      formValue.value.password = ''
-      remberMe.value = false
+const formRef = ref<FormInst | null>(null)
+const rememberMe = ref(false)
+
+const formValue = ref({
+  email: '',
+  password: '',
+  role: '',
+  username: '',
+  firstName: '',
+  lastName: ''
+})
+
+const formRules = computed(() => {
+  const base = {
+    email: [
+      { required: true, message: 'Email jest wymagany', trigger: 'blur' },
+      { type: 'email' as const, message: 'Nieprawidłowy adres email', trigger: 'blur' }
+    ],
+    password: [
+      { required: true, message: 'Hasło jest wymagane', trigger: 'blur' },
+      {
+        validator: (_ :any, value: string) => {
+          const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/
+          if (!regex.test(value)) {
+            return new Error('Min. 8 znaków, duża litera, mała litera, cyfra')
+          }
+          return true
+        },
+        trigger: 'blur'
+      }
+    ]
+  }
+
+  if (signup.value) {
+    return {
+      ...base,
+      role: [{ required: true, message: 'Wybierz rolę', trigger: 'blur' }],
+      username: [{ required: true, message: 'Podaj nazwę użytkownika', trigger: 'blur' }],
+      firstName: [{ required: true, message: 'Imię jest wymagane', trigger: 'blur' }],
+      lastName: [{ required: true, message: 'Nazwisko jest wymagane', trigger: 'blur' }],
+      birthDate: [{ required: true, type: 'date', message: 'Wybierz datę urodzenia', trigger: 'change' }]
     }
   }
-const formRef = ref<FormInst | null>(null)
-const formValue = ref(
-  { 
+
+  return base
+})
+
+function handleChangeHeader(key: string) {
+  router.push({ name: 'who-are-you', params: { activePage: key } })
+
+  formValue.value = {
     email: '',
-    password: '' 
-  })
+    password: '',
+    role: '',
+    username: '',
+    firstName: '',
+    lastName: '',
+  }
+  rememberMe.value = false
+}
 
-const formRules= ref({
-  email: [{
-      required: true,
-      message: '',
-      trigger: 'manual'
-  },
-  {
-      type: 'email' as const,
-      message: 'Pole musi być adresem email',
-      trigger: 'manual'
-  }],
-  password: [{
-    validateFirst: true,
-    required: true,
-    message: "",
-    trigger: 'type'
-  },
-  {
-      validator: (rule, value : string) => {
-        const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/
-        if (!regex.test(value)) {
-          return new Error('Hasło musi mieć min. 8 znaków, dużą i małą literę oraz cyfrę')
+async function handleSubmit() {
+  formRef.value?.validate(async (errors) => {
+    if (!errors) {
+      if (login.value) {
+        try {
+          await loginUser({email: formValue.value.email, password: formValue.value.password})
+          console.log('Logowanie:', formValue.value)
+          router.push("/catalog")
+        } catch (error: any) {
+          alert("Błędne hasło lub email!")
         }
-        return true
-      },
-      trigger: 'manual'
-    }]
-  })
 
-const remberMe = ref(false)
-  const router = useRouter()
-
-  const handleEnterClick = (e: MouseEvent | KeyboardEvent) =>{
-    e.preventDefault()
-    formRef.value?.validate((errors) => {
-      if (!errors) {
-        alert("Email: " + formValue.value.email + " Hasło: " + formValue.value.password)
+      } else {
+        await registerUser(formValue.value)
+        console.log('Rejestracja:', formValue.value)
       }
-    })
-  }
-  const handleGoogleClick = () =>{
+    } else {
+      console.warn('Błędy walidacji:', errors)
+    }
+  })
+}
 
+async function handleGoogleClick() {
+  if(formValue.value.role == '' && signup.value) {
+    console.log("rola: " + formValue.value.role + ", signup: " + signup.value)
+    alert("Wybierz role!")
+    return
   }
+  const { setTempRole } = useAuth();
+  setTempRole(formValue.value.role);
+  console.log("ustawiam role")
+  window.location.href = 'http://localhost:8080/oauth2/authorization/google'
+}
+
 </script>
-
 <style scoped>
 
 :deep(*){
@@ -294,6 +311,21 @@ h1{
 }
 :deep(div.n-form-item-feedback-wrapper){
   --n-feedback-height: 12px;
+}
+
+:deep(.n-radio-button){
+  --n-button-border-color-active: var(--text-accent-color);
+  --n-button-border-radius: 3px;
+  --n-button-box-shadow: inset 0 0 0 1px #0000;
+  --n-button-box-shadow-focus: inset 0 0 0 1px var(--text-accent-color), 0 0 0 2px rgba(24, 160, 88, 0.3);
+  --n-button-box-shadow-hover: inset 0 0 0 1px #0000;
+  --n-button-color: transparent;
+  --n-button-color-active: #FFF;
+  --n-button-text-color: white;
+  --n-button-text-color-hover: var(--text-accent-color);
+  --n-button-text-color-active: var(--text-accent-color);
+  --n-height: 34px;
+  --n-opacity-disabled: 0.5;
 }
 
 </style>

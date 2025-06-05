@@ -1,123 +1,264 @@
-
 <template>
   <main>
     <UserPanelHeader />
-    <div style="width: 80%; margin: auto auto;">
-      <n-calendar v-model:value="selectedDate">
-        <template #default="{ year, month, date }">
-          <n-tooltip
-            v-if="hasEvents(year, month, date)"
-            trigger="hover"
-            placement="top"
-          >
-            <template #trigger>
-              <div class="calendar-cell with-event">
-                
-              </div>
-            </template>
-            <div v-for="event in getEventsForDateParts(year, month, date)" :key="event.time">
-              {{ event.time }} – {{ getStudentName(event.studentId) }}
-            </div>
-          </n-tooltip>
-
-          <div
-            v-else
-            class="calendar-cell"
-          >
+    <div class="page">
+      <div class="custom-calendar">
+        <div class="calendar-header">
+          <button class="month-btn" @click="prevMonth">&lt;</button>
+          <span class="month-label">{{ monthNames[currentMonth] }} {{ currentYear }}</span>
+          <button class="month-btn" @click="nextMonth">&gt;</button>
+        </div>
+        <div class="calendar-grid">
+          <div v-for="day in weekDays" :key="day" class="day-header">{{ day }}</div>
+          <div v-for="cell in calendarCells" :key="cell.dateKey"
+            :class="['calendar-cell', { 'with-event': cell.hasEvent, 'today': cell.isToday, 'selected':cell.dateStr==selectedDate }]"
+            @click="cell.dateStr && selectDate(cell.dateStr)">
+            {{ cell.dateStr ? cell.dateStr.split('-')[2] : '' }}
           </div>
-        </template>
-      </n-calendar>
+        </div>
+      </div>
+
+      <div class="events-container">
+        <h3>Wydarzenia dla {{ new Date(selectedDate).toLocaleDateString('pl-PL') }}</h3>
+        <div v-if="eventsForSelectedDate.length" class="event-list">
+          <div v-for="event in eventsForSelectedDate" :key="event.time" class="event-item">
+            <strong> {{ [event.time.split(":")[0], event.time.split(":")[1]].join(":") }} {{ event.student.firstName }}
+              {{ event.student.lastName }}</strong> {{ event.subject }} ({{ event.price }} zł)
+          </div>
+        </div>
+        <div v-else class="no-events">Brak zaplanowanych wydarzeń.</div>
+      </div>
     </div>
   </main>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { NCalendar, NTooltip } from 'naive-ui'
+import { ref, computed, onMounted } from 'vue'
 import UserPanelHeader from '@/components/UserPanelHeader.vue'
+import { getAllSlots } from '@/service/lessonsService'
+import { getMe } from '@/service/teacherService'
 
-const selectedDate = ref(Date.now())
+const today = new Date().toISOString().split('T')[0]
+const selectedDate = ref<string>(today)
+const currentDate = new Date()
+const currentMonth = ref(currentDate.getMonth())
+const currentYear = ref(currentDate.getFullYear())
 
-function formatPartsToISO(year: number, month: number, date: number): string {
-  return `${year}-${String(month).padStart(2, '0')}-${String(date).padStart(2, '0')}`
-}
-
-function hasEvents(year: number, month: number, date: number): boolean {
-  return mockEvents.some(e => e.date === formatPartsToISO(year, month, date))
-}
-
-function getEventsForDateParts(year: number, month: number, date: number) {
-  return mockEvents.filter(e => e.date === formatPartsToISO(year, month, date))
-}
-
-function getStudentName(id: number): string {
-  const s = students.find(s => s.id === id)
-  return s ? `${s.name} ${s.surname}` : 'Nieznany'
-}
-
-const mockEvents = [
-  { studentId: 1, date: '2025-05-09', time: '09:00' },
-  { studentId: 2, date: '2025-05-09', time: '10:30' },
-  { studentId: 3, date: '2025-05-09', time: '14:00' },
-  { studentId: 4, date: '2025-05-10', time: '11:00' },
-  { studentId: 5, date: '2025-05-10', time: '12:30' },
-  { studentId: 6, date: '2025-05-10', time: '15:00' },
-  { studentId: 7, date: '2025-05-10', time: '16:30' },
-  { studentId: 8, date: '2025-05-11', time: '08:00' },
-  { studentId: 1, date: '2025-05-11', time: '09:30' },
-  { studentId: 2, date: '2025-05-11', time: '13:00' },
-  { studentId: 3, date: '2025-05-11', time: '14:30' },
-  { studentId: 4, date: '2025-05-12', time: '10:00' },
-  { studentId: 5, date: '2025-05-12', time: '11:30' },
-  { studentId: 6, date: '2025-05-12', time: '13:00' },
-  { studentId: 7, date: '2025-05-12', time: '14:30' },
-  { studentId: 8, date: '2025-05-13', time: '09:00' },
-  { studentId: 9, date: '2025-05-13', time: '10:30' },
-  { studentId: 10, date: '2025-05-13', time: '13:00' },
-  { studentId: 1, date: '2025-05-13', time: '14:30' },
-  { studentId: 2, date: '2025-05-13', time: '16:00' }
+const monthNames = [
+  'Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec',
+  'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień'
 ]
+const weekDays = ['Pn', 'Wt', 'Sr', 'Cz', 'Pt', 'Sb', 'Nd']
 
-const students = [
-    { id: 1, name: 'Anna', surname: 'Kowalska', subject: 'Matematyka', price: 120 },
-    { id: 2, name: 'Marek', surname: 'Nowak', subject: 'Angielski', price: 100 },
-    { id: 3, name: 'Zofia', surname: 'Wiśniewska', subject: 'Biologia', price: 130 },
-    { id: 4, name: 'Kamil', surname: 'Kowalczyk', subject: 'Chemia', price: 140 },
-    { id: 5, name: 'Elżbieta', surname: 'Dąbrowska', subject: 'Fizyka', price: 150 },
-    { id: 6, name: 'Tomasz', surname: 'Jankowski', subject: 'Polski', price: 90 },
-    { id: 7, name: 'Natalia', surname: 'Szymańska', subject: 'Historia', price: 110 },
-    { id: 8, name: 'Piotr', surname: 'Wójcik', subject: 'Geografia', price: 95 },
-    { id: 9, name: 'Karolina', surname: 'Zielińska', subject: 'Informatyka', price: 160 },
-    { id: 10, name: 'Paweł', surname: 'Lewandowski', subject: 'Anatomia', price: 180 },
-]
+function isSameDate(d1: Date, d2: Date): boolean {
+  return d1.getFullYear() === d2.getFullYear() && d1.getMonth() === d2.getMonth() && d1.getDate() === d2.getDate()
+}
+
+function formatDateKey(date: Date): string {
+  return new Date(date).toISOString().split('T')[0]
+}
+
+function selectDate(dateStr: string) {
+  selectedDate.value = dateStr
+}
+
+function prevMonth() {
+  if (currentMonth.value === 0) {
+    currentMonth.value = 11
+    currentYear.value--
+  } else {
+    currentMonth.value--
+  }
+}
+
+function nextMonth() {
+  if (currentMonth.value === 11) {
+    currentMonth.value = 0
+    currentYear.value++
+  } else {
+    currentMonth.value++
+  }
+}
+
+
+const calendarCells = computed(() => {
+  const firstDay = new Date(currentYear.value, currentMonth.value, 1)
+  const firstWeekDay = (firstDay.getDay() + 6) % 7
+  const daysInMonth = new Date(currentYear.value, currentMonth.value + 1, 0).getDate()
+
+  const cells = []
+
+  for (let i = 0; i < firstWeekDay; i++) {
+    cells.push({ dateStr: '', dateKey: 'empty-' + i, hasEvent: false, isToday: false })
+  }
+
+  for (let day = 1; day <= daysInMonth; day++) {
+    const date = new Date(currentYear.value, currentMonth.value, day)
+    const dateStr = date.toISOString().split('T')[0]
+
+    cells.push({
+      dateStr,
+      dateKey: dateStr,
+      hasEvent: events.value.some(e => e.date === dateStr),
+      isToday: dateStr === today
+    })
+  }
+
+  return cells
+})
+
+const eventsForSelectedDate = computed(() => {
+  const iso = formatDateKey(new Date(selectedDate.value))
+  return events.value.filter(e => e.date === iso)
+})
+
+interface Event {
+  student: {
+    firstName: string
+    lastName: string
+  }
+  date: string
+  subject: string
+  price: number
+  time: string
+  state: string
+}
+const events = ref<Array<Event>>([])
+
+
+onMounted(async () => {
+  const me = await getMe()
+  const teacherId = me?.teacher?.user?.id
+  if (teacherId) {
+    const allevents = await getAllSlots(teacherId)
+    events.value = allevents.filter((e: Event) => e.state == "BOOKED" || e.state == "COMPLETED")
+    console.log(events.value)
+  }
+}
+)
+
 </script>
 
 <style scoped>
-main{
-  height: calc(100% - var(--navbar-height));
-  display: flex;
-  flex-direction: column;
+.page {
+  width: 80%;
+  margin: auto;
+  color: white;
 }
-:deep(.n-calendar *)
-{
-  color: white !important;
+
+.custom-calendar {
+  margin: 1rem 0;
 }
-.calendar-cell {
+
+.calendar-header {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
-  padding: 2px;
-  min-height: 40px;
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
 }
 
-.with-event {
-  background-color: #fff0f0;
-  border-radius: 4px;
-  transition: background-color 0.2s ease-in-out;
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.2rem;
 }
 
-.with-event:hover {
-  background-color: #ffe0e0;
+.day-header {
+  text-align: center;
+  font-weight: bold;
+}
+
+.calendar-cell {
+  padding: 10px;
+  text-align: center;
+  border-radius: 6px;
   cursor: pointer;
+  transition: background-color 0.2s;
+  border: 1px solid transparent;
+}
+.calendar-cell:hover{
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.calendar-cell.today {
+  border: 1px solid #ffd700;
+}
+
+.calendar-cell.with-event {
+  background-color: rgba(255, 215, 0, 0.15);
+}
+
+.calendar-cell.with-event:hover {
+  background-color: rgba(255, 215, 0, 0.25);
+}
+
+.events-container {
+  margin-top: 2rem;
+  padding: 1rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  border: 1px solid white;
+}
+
+.event-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.event-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.event-item:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.event-time {
+  font-weight: bold;
+  color: #ffd700;
+}
+
+.event-student {
+  color: white;
+}
+
+.no-events {
+  text-align: center;
+  padding: 1rem;
+  color: #ccc;
+  font-style: italic;
+}
+
+.month-btn {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid white;
+  border-radius: 6px;
+  padding: 4px 12px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.month-btn:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.selected{
+  border:   1px solid rgba(255, 215, 0, 0.25);
+  transition: all 0.2;
+}
+
+.month-label {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: white;
 }
 </style>

@@ -1,9 +1,9 @@
 <template>
     <header>
         <RouterLink activeClass="active" to="/profile/start">Start</RouterLink>
-        <RouterLink activeClass="active" to="/profile/students">Uczniowie</RouterLink>
+        <!-- <RouterLink activeClass="active" to="/profile/students">Uczniowie</RouterLink> -->
         <RouterLink activeClass="active" to="/profile/calendar">Kalendarz</RouterLink>
-        <!-- <RouterLink activeClass="active" to="/profile/info">Profil</RouterLink> -->
+        <RouterLink activeClass="active" to="/profile/me">Profil</RouterLink>
     </header>
 </template>
 

@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import {ref} from 'vue';
-import { NCheckbox, NSelect, NButton } from 'naive-ui';
+import {onMounted, ref} from 'vue';
+import { NCheckbox, NSelect, NButton, collapseItemProps, NDropdown } from 'naive-ui';
 import { useRouter } from 'vue-router';
+import { couldStartTrivia } from 'typescript';
 
 const isOnline = ref(false);
 
@@ -14,61 +15,48 @@ const goToCatalog = () => {
   router.push("/catalog")
 }
 
-const subjectOptions = [{
-  label: 'Najczęściej wybierane:',
-  value: 'none',
-  disabled: true
-},
-{
-  label: 'Matematyka',
-  value: 'matematyka',
-},
-{
-  label: 'Angielski',
-  value: 'angielski',
-},
-{
-  label: 'Polski',
-  value: 'polski',
-},
-{
-  label: 'Geografia',
-  value: 'geografia',
-},
-{
-  label: 'Inne:',
-  value: 'none',
-  disabled: true
-},
-]
+const subjectOptions = ref()
+const locOptions = ref()
 
-const locOptions = [{
-  label: 'Najczęściej wybierane:',
-  value: 'none',
-  disabled: true
-},
-{
-  label: 'Warszawa',
-  value: 'warszawa',
-},
-{
-  label: 'Gdańsk',
-  value: 'gdansk',
-},
-{
-  label: 'Kraków',
-  value: 'krakow',
-},
-{
-  label: 'Lublin',
-  value: 'lublin',
-},
-{
-  label: 'Inne:',
-  value: 'none',
-  disabled: true
-},
-]
+async function getAllSubject() {
+  try {
+    const response = await fetch("http://localhost:8080/subject/all")
+    const data =  await response.json()
+    subjectOptions.value = data.map((subject:any) =>(
+      {
+        label: subject.name,
+        key: subject.id
+      }
+  ))
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+interface Location {
+  id: string,
+  town: string;
+  district: string | null;
+}
+
+async function getAllLocations() {
+
+
+
+
+  locOptions.value = options;
+}
+
+const choosenSubject = ref("Wybierz przedmiot")
+
+const handleSubjectSelection = (key: string | number, option ) => {
+  choosenSubject.value = option.label
+}
+const choosenLocalization = ref("Wybierz lokalizację")
+
+const handleLocSelection = (key: string | number, option ) => {
+  choosenLocalization.value = option.label
+}
 
 
 
@@ -85,11 +73,18 @@ const locOptions = [{
           Znajdz korepetytora
         </div>
         <div class="selection-options">
-          <div class="select" id="subject">
-            <NSelect placeholder="Przedmiot" :options="subjectOptions" />
+          <div class="select" id="subject" @click="getAllSubject()">
+            <span>Przedmiot:</span>
+            <NDropdown @select="handleSubjectSelection" :options="subjectOptions">
+              <n-button text >{{ choosenSubject }}</n-button>
+            </NDropdown>
           </div>
-          <div class="select" id="localization">
-            <NSelect placeholder="Lokalizacja" :options="locOptions" :disabled="isOnline" :class="isOnline ? 'online' : ''"/>
+          <div class="select" :class="{online:isOnline}" id="localization" :disabled="isOnline" @click="getAllLocations()" >
+            <span>Lokalizacja:</span>
+            <NDropdown @select="handleLocSelection" :options="locOptions" >
+              <n-button text>{{ choosenLocalization }}</n-button>
+            </NDropdown>
+
           </div>
           <div id="check-box">
             <NCheckbox @click="handleOnline"/>
@@ -159,12 +154,26 @@ const locOptions = [{
     align-items: center;
   }
 
+  .selection-options span{
+    font-weight: bold;
+    font-size: 1rem;
+  }
+
   .online{
-    background-color: red;
+    border: 1px solid gray !important;
+    color: gray !important;
   }
 
   .select{
+    border: 1px solid white;
     flex: 1;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+
   }
 
   #check-box{
@@ -174,6 +183,12 @@ const locOptions = [{
     gap: 0.5rem;
     width: fit-content;
   }
+  :deep(.select .n-button){
+    font-size: 1rem;
+    font-style: italic;
+    color: var(--text-accent-color);
+  }
+
 
 
 </style>

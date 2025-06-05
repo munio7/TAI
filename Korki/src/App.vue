@@ -1,6 +1,11 @@
 <script setup lang="ts">
+  import { ref } from 'vue'
   import { RouterLink, RouterView } from 'vue-router'
   import Navbar from './components/Navbar.vue';
+</script>
+
+<script lang="ts">
+  export const userRole = ref<string | null>(null);
 </script>
 
 <style>
@@ -14,9 +19,11 @@
         <Navbar/>
       </nav>
   </header>
-    <transition name="fade" mode="out-in">
-      <router-view :key="$route.fullPath" />
-    </transition>
+    <router-view v-slot="{ Component }">
+      <transition name="fade" mode="out-in">
+        <component :is="Component" :key="$route.fullPath" />
+      </transition>
+  </router-view>
 </template>
 
 <style scoped>

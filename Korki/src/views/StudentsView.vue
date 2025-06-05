@@ -16,12 +16,13 @@
 </template>
 
 <script setup lang="ts">
-import {computed} from 'vue'
+import {computed, onMounted} from 'vue'
 import UserPanelHeader from '@/components/UserPanelHeader.vue'
 import UserPanelBlockInfo from '@/components/UserPanelBlockInfo.vue'
 import { NCalendar, NCard, NTag } from 'naive-ui'
-import WeekCalendar from '@/components/WeekCalendar.vue'
+import WeekCalendar from '@/components/DayCalendar.vue'
 import StudentBlock from '@/components/StudentBlock.vue'
+import { getStudents } from '@/service/teacherService'
 
 const getSvgPath = (filename: string) => {
     return new URL(`../assets/${filename}.svg`, import.meta.url).href
@@ -91,6 +92,12 @@ function getEventsForDate(date: Date) {
     const iso = formatISODate(date)
     return mockEvents.filter(e => e.date === iso)
 }
+
+
+onMounted(async () =>{
+    await getStudents()
+})
+
 </script>
 
 <style scoped>
